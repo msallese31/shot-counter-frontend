@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/counting-frontend/backend"
@@ -48,23 +47,26 @@ func handleSignInRequest(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Handling sign in request")
 	defer r.Body.Close()
 
-	bodyBytes, _ := ioutil.ReadAll(r.Body)
-	bodyString := string(bodyBytes)
-	fmt.Println(bodyString)
+	// bodyBytes, _ := ioutil.ReadAll(r.Body)
+	// bodyString := string(bodyBytes)
+	// fmt.Println(bodyString)
 
 	err := json.NewDecoder(r.Body).Decode(&signInRequest)
 	switch {
 	case err == io.EOF:
 		// empty body
+		fmt.Println("Empty request body")
 		w.WriteHeader(http.StatusBadRequest)
 		types.SetupAndroidResponse(w, "Empty request body", 0)
 		return
 	case err != nil:
 		// other error
+		fmt.Println("Bad request")
 		w.WriteHeader(http.StatusBadRequest)
 		types.SetupAndroidResponse(w, "Bad request", 0)
 		return
 	}
+	w.WriteHeader(200)
 
 	return
 }
