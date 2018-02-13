@@ -5,6 +5,7 @@ import "net/http"
 // CountObject is meant to hold information about a "/count" request
 type CountObject struct {
 	Request      http.Request
+	Writer       http.ResponseWriter
 	shotsCounted int
 	errorMessage error
 	// jsonBody     string json
