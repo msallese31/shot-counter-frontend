@@ -22,7 +22,7 @@ docker build --no-cache -t shot-counter-frontend -f Dockerfile.build .
 # Running the Docker Image Locally
 
 ```
-docker run -it -p 123:8080
+docker run -it -p 123:8080 shot-counter-frontend
 ```
 
 # Making a Request Against it
