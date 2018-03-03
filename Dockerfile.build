@@ -1,0 +1,12 @@
+FROM golang:1.10.0-alpine3.7
+WORKDIR /app
+COPY go-workspace /app/go-workspace
+COPY entrypoint.sh /app/entrypoint.sh
+RUN ["sh", "/app/entrypoint.sh"]
+
+FROM alpine:latest
+RUN apk --no-cache add ca-certificates
+
+COPY --from=0 /app/main /main
+
+CMD ["/main"]
