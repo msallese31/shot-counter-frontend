@@ -1,0 +1,16 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: shot-counter-frontend
+  labels: {app: shot-counter-frontend}
+spec:
+  replicas: 1
+  template:
+    metadata: {labels: {app: shot-counter-frontend}}
+    spec:
+      containers:
+      - name: shot-counter-frontend
+        image: shotcounterapp/shot-counter-frontend
+        command:
+        ports:
+          - containerPort: 8080

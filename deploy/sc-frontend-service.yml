@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: shot-counter-frontend
+spec:
+  type: LoadBalancer
+  selector:
+    app: shot-counter-frontend
+  ports:
+  - protocol: TCP
+    port: 8080
