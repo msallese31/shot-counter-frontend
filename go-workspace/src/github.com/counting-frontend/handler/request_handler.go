@@ -55,22 +55,27 @@ func handleSignInRequest(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 
 	err := json.NewDecoder(r.Body).Decode(&signInRequest)
-	switch err {
-	case nil:
-		signIn(&signInRequest)
-		w.WriteHeader(200)
-		return
-	default:
-		// other error
+	if err != nil {
 		fmt.Println("Something went wrong reading bytes during sign in request: " + err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		types.SetupAndroidResponse(w, "Internal Server Error", 0)
 		return
 	}
 
+	err = signIn(&signInRequest)
+	switch err {
+	case nil:
+		w.WriteHeader(http.StatusOK)
+		return
+	default:
+		// other error
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+
 }
 
-func signIn(signInRequest *types.SignInRequest) {
+func signIn(signInRequest *types.SignInRequest) error {
 	fmt.Println("handling sign in request")
 
 	// TODO: Stop using mock sign in request
@@ -84,15 +89,17 @@ func signIn(signInRequest *types.SignInRequest) {
 			err = createUser(signInRequest)
 			if err != nil {
 				fmt.Println("Unable to create new user: " + err.Error())
-				// TODO: don't panic!
-				panic("I need to put a json response for failing to create a new user here")
+				return err
 			}
 			fmt.Println("Created new user!")
+			return nil
 		default:
 			fmt.Println("Unseen DB error: \n" + errorString)
+			return err
 		}
 	} else {
 		fmt.Println("Found user with name: " + userFound.Name)
+		return nil
 	}
 
 	// Condition on whether or not the user exists
