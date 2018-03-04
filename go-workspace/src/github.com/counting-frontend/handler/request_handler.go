@@ -58,7 +58,6 @@ func handleSignInRequest(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println("Something went wrong reading bytes during sign in request: " + err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
-		types.SetupAndroidResponse(w, "Internal Server Error", 0)
 		return
 	}
 
