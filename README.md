@@ -43,3 +43,11 @@ curl localhost:123/count
 cd deploy
 ./deploy.sh
 ```
+
+# Mock /sign-in request via curl
+
+NOTE You'll probably need to update the IP
+
+```
+curl -i -X POST -d @signin.json 35.227.124.115:8080/sign-in
+```

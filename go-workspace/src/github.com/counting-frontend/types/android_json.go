@@ -21,8 +21,9 @@ type AccelerometerData struct {
 
 // SignInRequest is the data type for when we recieve a /sign-in request from the android application
 type SignInRequest struct {
-	IDToken   string `json:"idToken"`
-	UserEmail string `json:"email"`
+	IDToken string `json:"idToken"`
+	Name    string `json:"name"`
+	Email   string `json:"email"`
 }
 
 // AndroidResponse is the json data type we respond to an Android request with
