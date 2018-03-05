@@ -63,6 +63,7 @@ func CallShotCounter(countData data.CountObject) {
 	if err == nil {
 		fmt.Println(i)
 	}
+	// TODO: Understand why this prints Good?
 	fmt.Println("Shots counted from backend: " + shotsCounted)
 	fmt.Println("Shots counted from backend: " + strconv.Itoa(i))
 	fmt.Println(resp)
