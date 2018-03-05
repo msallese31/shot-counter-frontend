@@ -30,7 +30,6 @@ func (h *RequestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	} else {
 		// TODO: Create error message -> error code mapping
 		w.WriteHeader(http.StatusBadRequest)
-		types.SetupAndroidResponse(w, "Url endpoint path not supported", 0)
 	}
 }
 
