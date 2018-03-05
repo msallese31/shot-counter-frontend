@@ -1,0 +1,6 @@
+{
+	"X_Acc": [ 1.23, 1.23, 1.23 ],
+	"Y_Acc": [ 1.23, 1.23, 1.23 ],
+	"Z_Acc": [ 1.23, 1.23, 1.23 ],
+	"idToken": "dummyTokenForTesting"
+}
