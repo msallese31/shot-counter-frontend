@@ -51,3 +51,11 @@ NOTE You'll probably need to update the IP
 ```
 curl -i -X POST -d @signin.json 35.227.124.115:8080/sign-in
 ```
+
+# Mock /count request via curl
+
+NOTE You'll probably need to update the IP
+
+```
+curl -i -X POST -d @count.json 35.227.124.115:8080/count
+```
