@@ -4,6 +4,7 @@ metadata:
   name: shot-counter-frontend
 spec:
   type: LoadBalancer
+  loadBalancerIP: 35.227.124.115
   selector:
     app: shot-counter-frontend
   ports:

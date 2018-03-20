@@ -1,0 +1,40 @@
+Collection Examples
+
+> db.users.findOne()
+{
+    _id : 'idFromGoogleAccount',
+    name : 'Bo Phillips',
+    email : 'bophil@gmail.com'
+    daily_count : 0,
+    monthly_count : 0,
+    daily_requests : 0,
+    monthly_requests : 0
+}
+
+>db.accelData.findOne()
+{
+    time : ISODate("2012-03-28T09:42:41.382Z"),
+    values : [{
+                x: ['1.234', 4.321],
+                y: ['1.234', 4.321],
+                z: ['1.234', 4.321] 
+             }],
+    shots_counted : 0
+    user_id: 'idFromGoogleAccount'       // Reference to the Host document
+}
+
+
+  // find the most recent 5 documents linked to that user
+> last_5_msg = db.accelData.find({user_id: 'idFromGoogleAccount'}).sort({time : -1}).limit(5).toArray()
+
+
+Daily Counts / Monthly Counts
+
+Script that makes a request once a day to hit the /resetAndUpdateCounts endpoint
+    this should reset and update the requests too
+
+DB Actions
+Sign in (check if user exists and if they don't, create a DB entry)
+Update the requests on inbound
+Update the counts during the response (after we've processed the data)
+Add to the accelData during the response
