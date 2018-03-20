@@ -27,6 +27,8 @@ func (h *RequestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		handleCountRequest(w, r)
 	} else if r.URL.Path == "/sign-in" {
 		handleSignInRequest(w, r)
+	} else if r.URL.Path == "/readiness" {
+		w.WriteHeader(http.StatusOK)
 	} else {
 		// TODO: Create error message -> error code mapping
 		w.WriteHeader(http.StatusBadRequest)
@@ -51,12 +53,17 @@ func handleSignInRequest(w http.ResponseWriter, r *http.Request) {
 	}
 	var signInRequest types.SignInRequest
 	fmt.Println("Handling sign in request")
-	defer r.Body.Close()
 
+	if r.Body == nil {
+		fmt.Println("No body provided in sign-in request")
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	defer r.Body.Close()
 	err := json.NewDecoder(r.Body).Decode(&signInRequest)
 	if err != nil {
 		fmt.Println("Something went wrong reading bytes during sign in request: " + err.Error())
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
