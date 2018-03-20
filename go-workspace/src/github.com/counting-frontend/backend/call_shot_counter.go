@@ -21,7 +21,10 @@ func CallShotCounter(countData data.CountObject) {
 	// bodyBytes, _ := ioutil.ReadAll(countData.Request.Body)
 	// bodyString := string(bodyBytes)
 	// fmt.Println(bodyString)
-
+	if countData.Request.Body == nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 	defer countData.Request.Body.Close()
 	err := json.NewDecoder(countData.Request.Body).Decode(&accData)
 	switch {
