@@ -82,7 +82,7 @@ func signIn(signInRequest *types.SignInRequest) error {
 		errorString := err.Error()
 		switch errorString {
 		case "not found":
-			fmt.Println("User not found with id: " + signInRequest.IDToken)
+			fmt.Println("User not found with id: " + signInRequest.IDToken + " Name: " + signInRequest.Name + " Email: " + signInRequest.Email)
 			// Create User
 			err = createUser(signInRequest)
 			if err != nil {
@@ -114,7 +114,7 @@ func lookupUser(signInRequest *types.SignInRequest) (types.User, error) {
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		err = usersCollection.Find(bson.M{"_id": signInRequest.IDToken}).One(&lookupUser)
+		err = usersCollection.Find(bson.M{"google_token": signInRequest.IDToken}).One(&lookupUser)
 	}
 	return lookupUser, err
 }
