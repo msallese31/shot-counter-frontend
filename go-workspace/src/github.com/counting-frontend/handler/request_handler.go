@@ -40,7 +40,13 @@ func handleCountRequest(w http.ResponseWriter, r *http.Request) {
 	countData := data.CountObject{}
 	countData.Request = *r
 	countData.Writer = w
-	backend.CallShotCounter(countData)
+	switch r.Method {
+	case http.MethodGet:
+		backend.GetShotCount(countData)
+	case http.MethodPost:
+		backend.CallShotCounter(countData)
+	}
+
 	return
 }
 

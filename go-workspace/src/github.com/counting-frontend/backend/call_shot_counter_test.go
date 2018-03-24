@@ -19,7 +19,6 @@ func TestCallShotCounter(t *testing.T) {
 	}
 
 	countData := data.CountObject{}
-	countData.GetCount()
 	countData.Request = *req
 
 	rr := httptest.NewRecorder()
@@ -40,7 +39,6 @@ func TestCallShotCounterBadBody(t *testing.T) {
 	}
 
 	countData := data.CountObject{}
-	countData.GetCount()
 	countData.Request = *req
 
 	rr := httptest.NewRecorder()
@@ -61,7 +59,6 @@ func TestCallShotCounterEmptyBody(t *testing.T) {
 	}
 
 	countData := data.CountObject{}
-	countData.GetCount()
 	countData.Request = *req
 
 	rr := httptest.NewRecorder()

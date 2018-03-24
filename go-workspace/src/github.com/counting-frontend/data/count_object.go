@@ -1,22 +1,14 @@
 package data
 
 import "net/http"
+import "github.com/counting-frontend/types"
 
 // CountObject is meant to hold information about a "/count" request
 type CountObject struct {
-	Request      http.Request
-	Writer       http.ResponseWriter
-	shotsCounted int
-	errorMessage error
+	Request           http.Request
+	Writer            http.ResponseWriter
+	ShotsCounted      int
+	errorMessage      error
+	AccelerometerData *types.AccelerometerData
 	// jsonBody     string json
-}
-
-// SetCount is a setter method for the shot count of a CountObject
-func (c *CountObject) SetCount(count int) {
-	c.shotsCounted = count
-}
-
-// GetCount is a getter method for the shot count of a CountObject
-func (c *CountObject) GetCount() (count int) {
-	return c.shotsCounted
 }
