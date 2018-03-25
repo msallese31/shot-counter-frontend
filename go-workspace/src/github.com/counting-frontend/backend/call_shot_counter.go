@@ -43,7 +43,7 @@ func CallShotCounter(countData data.CountObject) {
 	b := new(bytes.Buffer)
 	json.NewEncoder(b).Encode(accData)
 
-	fmt.Println("id token: " + accData.IDToken)
+	fmt.Println("email: " + accData.Email)
 	countData.AccelerometerData = accData
 	fmt.Println("Calling backend")
 	// TODO: Stick configuration stuff in a context
@@ -68,7 +68,7 @@ func CallShotCounter(countData data.CountObject) {
 	}
 	fmt.Println("Shots counted from backend: " + shotsCounted)
 	fmt.Println("Shots counted Int: " + string(shotsCountedInt))
-	fmt.Println("shots counted for id: " + countData.AccelerometerData.IDToken + "; count: " + shotsCounted + "\nTHIS NEEDS TO BE THE SAME AS THE NEXT ONE")
+	fmt.Println("shots counted for id: " + countData.AccelerometerData.Email + "; count: " + shotsCounted + "\nTHIS NEEDS TO BE THE SAME AS THE NEXT ONE")
 
 	countData.ShotsCounted = shotsCountedInt
 	fmt.Println(resp)
@@ -86,11 +86,11 @@ func CallShotCounter(countData data.CountObject) {
 }
 
 func submitDataToDB(countData *data.CountObject) {
-	fmt.Println(&countData.AccelerometerData.IDToken)
-	fmt.Println("shots counted for id: " + countData.AccelerometerData.IDToken + "; count: " + strconv.Itoa(countData.ShotsCounted) + "\nTHIS IS THE NEXT ONE")
+	fmt.Println(&countData.AccelerometerData.Email)
+	fmt.Println("shots counted for email: " + countData.AccelerometerData.Email + "; count: " + strconv.Itoa(countData.ShotsCounted) + "\nTHIS IS THE NEXT ONE")
 
 	dataToSubmit := types.AccelerometerData{}
-	dataToSubmit.IDToken = countData.AccelerometerData.IDToken
+	dataToSubmit.Email = countData.AccelerometerData.Email
 	dataToSubmit.X = countData.AccelerometerData.X
 	dataToSubmit.Y = countData.AccelerometerData.Y
 	dataToSubmit.Z = countData.AccelerometerData.Z
@@ -123,7 +123,7 @@ func incrementCountInDB(countData *data.CountObject) {
 		fmt.Println("Error dialing mongodb: " + err.Error())
 	}
 
-	colQuerier := bson.M{"google_token": countData.AccelerometerData.IDToken}
+	colQuerier := bson.M{"email": countData.AccelerometerData.Email}
 	fmt.Println(colQuerier)
 	user := types.User{}
 	// Error check here?? TODO: Stop using test database

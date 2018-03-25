@@ -89,7 +89,6 @@ func handleSignInRequest(w http.ResponseWriter, r *http.Request) {
 func signIn(signInRequest *types.SignInRequest) error {
 	fmt.Println("handling sign in request")
 
-	// TODO: Stop using mock sign in request
 	userFound, err := lookupUser(signInRequest)
 	if err != nil {
 		errorString := err.Error()
@@ -127,7 +126,7 @@ func lookupUser(signInRequest *types.SignInRequest) (types.User, error) {
 	if err != nil {
 		fmt.Println(err)
 	} else {
-		err = usersCollection.Find(bson.M{"google_token": signInRequest.IDToken}).One(&lookupUser)
+		err = usersCollection.Find(bson.M{"email": signInRequest.Email}).One(&lookupUser)
 	}
 	return lookupUser, err
 }
@@ -142,6 +141,7 @@ func createUser(signInRequest *types.SignInRequest) error {
 	userToInsert.MonthlyCount = 0
 	userToInsert.DailyRequests = 0
 	userToInsert.MonthlyRequests = 0
+	userToInsert.AccountType = "free"
 
 	usersCollection, err := getUsersCollectionFromDB()
 	if err != nil {

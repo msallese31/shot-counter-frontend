@@ -14,7 +14,7 @@ import (
 func GetShotCount(countData data.CountObject) {
 
 	// TODO: Stuff idToken in countData;  right now idToken is in AccelerometerData which makes this difficult
-	idToken := countData.Request.URL.Query().Get("idToken")
+	email := countData.Request.URL.Query().Get("email")
 
 	// Create DB session
 	session, err := mgo.Dial("mongodb://main_admin:abc123@mongodb-service")
@@ -23,7 +23,7 @@ func GetShotCount(countData data.CountObject) {
 		fmt.Println("Error dialing mongodb: " + err.Error())
 	}
 
-	colQuerier := bson.M{"google_token": idToken}
+	colQuerier := bson.M{"email": email}
 	fmt.Println(colQuerier)
 	user := types.User{}
 	// Error check here?? TODO: Stop using test database
@@ -36,7 +36,7 @@ func GetShotCount(countData data.CountObject) {
 		if err != nil {
 			fmt.Println("Error finding user: " + err.Error())
 			countData.Writer.WriteHeader(http.StatusNotFound)
-			types.SetupAndroidResponse(countData.Writer, "Error:  tokenId either not supplied or not found", -1)
+			types.SetupAndroidResponse(countData.Writer, "Error:  email either not supplied or not found", -1)
 			return
 		}
 

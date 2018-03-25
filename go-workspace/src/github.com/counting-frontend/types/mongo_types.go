@@ -15,6 +15,7 @@ type User struct {
 	MonthlyCount    int    `bson:"monthly_count"`
 	DailyRequests   int    `bson:"daily_requests"`
 	MonthlyRequests int    `bson:"monthly_requests"`
+	AccountType     string `bson:"account_type"`
 }
 
 // AccelData is a struct that is meant to store a the accelerometer values coming from our mongodb backend

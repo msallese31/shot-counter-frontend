@@ -14,11 +14,11 @@ import (
 type AccelerometerData struct {
 	// The `json` struct tag maps between the json name
 	// and actual name of the field
-	X       *[]float32 `json:"X_Acc"`
-	Y       *[]float32 `json:"Y_Acc"`
-	Z       *[]float32 `json:"Z_Acc"`
-	IDToken string     `json:"idToken"`
-	Date    time.Time
+	X     *[]float32 `json:"X_Acc"`
+	Y     *[]float32 `json:"Y_Acc"`
+	Z     *[]float32 `json:"Z_Acc"`
+	Email string     `json:"email"`
+	Date  time.Time
 }
 
 // SignInRequest is the data type for when we recieve a /sign-in request from the android application
