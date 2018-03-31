@@ -137,7 +137,7 @@ func incrementCountInDB(countData *data.CountObject) {
 			fmt.Println("Error finding user: " + err.Error())
 			return
 		}
-		change := bson.M{"$inc": bson.M{"daily_count": countData.ShotsCounted}}
+		change := bson.M{"$inc": bson.M{"daily_count": countData.ShotsCounted, "monthly_count": countData.ShotsCounted}}
 
 		err = usersCollection.Update(colQuerier, change)
 		if err != nil {

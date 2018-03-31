@@ -30,7 +30,7 @@ func CreateUser(signInRequest *types.SignInRequest) error {
 		return err
 	}
 
-	err = usersCollection.Insert(userToInsert)
+	err = usersCollection.Insert(&userToInsert)
 	return err
 }
 

@@ -34,9 +34,13 @@ func (h *RequestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		t := time.Now()
 		fmt.Println("TEST DB DAILY RESET:  " + t.Format("3:04PM"))
 	} else if r.URL.Path == "/pdeuPqVVnL" {
-		// This endpoint will run once daily.  It's backed by a k8's "cronJob".
+		// This endpoint should be it once daily.  It's backed by a k8's "cronJob".
 		// This is where our logic for daily DB resets will go.
 		handleDailyEndpoint(w, r)
+	} else if r.URL.Path == "/6KVmH3cjgX" {
+		// This endpoint should be hit once a month by k8's cronjob.
+		// This is where we will capture & clear monthly history.
+		handleMonthlyEndpoint(w, r)
 	} else {
 		// TODO: Create error message -> error code mapping
 		w.WriteHeader(http.StatusBadRequest)
@@ -68,6 +72,20 @@ func handleDailyEndpoint(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	fmt.Println("Daily endpoint work completed successfully")
+	w.WriteHeader(http.StatusOK)
+}
+
+func handleMonthlyEndpoint(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("In handleMonthlyEndpoint")
+	t := time.Now()
+	fmt.Println("MONTHLY ENDPOINT HIT!! " + t.Format("3:04PM"))
+	err := cron.DoMonthlyWork(w, r)
+	if err != nil {
+		fmt.Println(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	fmt.Println("Monthly endpoint work completed successfully")
 	w.WriteHeader(http.StatusOK)
 }
 

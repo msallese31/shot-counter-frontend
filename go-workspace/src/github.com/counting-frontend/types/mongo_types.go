@@ -18,6 +18,24 @@ type User struct {
 	AccountType     string `bson:"account_type"`
 }
 
+// DailyHistory is a struct for inserting daily history into the history collection
+type DailyHistory struct {
+	// The `json` struct tag maps between the json name
+	// and actual name of the field
+	Email      string `bson:"email"`
+	DailyCount int    `bson:"daily_count"`
+	Date       string `bson:"date"`
+}
+
+// MonthlyHistory is a struct for inserting monthly history into the history collection
+type MonthlyHistory struct {
+	// The `json` struct tag maps between the json name
+	// and actual name of the field
+	Email        string `bson:"email"`
+	MonthlyCount int    `bson:"daily_count"`
+	Date         string `bson:"date"`
+}
+
 // AccelData is a struct that is meant to store a the accelerometer values coming from our mongodb backend
 type AccelData struct {
 	// The `json` struct tag maps between the json name
