@@ -8,14 +8,14 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
-func InsertDailyHistory() {
+func InsertDailyHistory() error {
 	fmt.Println("In InsertDailyHistory")
 
 	dailyHistoryCollection, err := GetDailyHistoryCollection()
 	if err != nil {
 		// TODO: Come up with how to handle this
 		fmt.Println(err)
-		return
+		return err
 	}
 
 	//CHANGE THE WAY THIS IS STRUCTURED
@@ -23,7 +23,7 @@ func InsertDailyHistory() {
 	if err != nil {
 		// TODO: Come up with how to handle this
 		fmt.Println(err)
-		return
+		return err
 	}
 
 	user := &types.User{}
@@ -39,6 +39,8 @@ func InsertDailyHistory() {
 		dailyHistory.DailyCount = user.DailyCount
 		dailyHistoryCollection.Insert(&dailyHistory)
 	}
+	fmt.Println("Successfully inserted daily history")
+	return nil
 }
 
 func InsertMonthlyHistory() {

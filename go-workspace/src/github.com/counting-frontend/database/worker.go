@@ -36,14 +36,7 @@ func GetDailyHistoryCollection() (*mgo.Collection, error) {
 	return dailyHistoryCollection, nil
 }
 
-func ResetDailyUserCounts() {
+func PerformDailyBackup() error {
 	fmt.Println("stub for now")
-}
-
-func PerformDailyBackup() {
-	fmt.Println("stub for now")
-}
-
-func ResetMonthlyUserCounts() {
-	fmt.Println("stub for now")
+	return nil
 }
