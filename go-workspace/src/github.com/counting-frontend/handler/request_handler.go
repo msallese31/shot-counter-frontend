@@ -67,6 +67,7 @@ func handleDailyEndpoint(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("DAILY ENDPOINT HIT!! " + t.Format("3:04PM"))
 	err := cron.DoDailyWork(w, r)
 	if err != nil {
+		// TODO: Figure out how to handle errors
 		fmt.Println(err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		return

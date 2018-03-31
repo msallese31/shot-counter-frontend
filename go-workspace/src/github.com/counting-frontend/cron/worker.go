@@ -13,9 +13,21 @@ import (
 func DoDailyWork(w http.ResponseWriter, r *http.Request) error {
 	fmt.Println("In DoDailyWork")
 
-	database.InsertDailyHistory()
-	database.ResetDailyUserCounts()
-	database.PerformDailyBackup()
+	err := database.InsertDailyHistory()
+	if err != nil {
+		fmt.Println("ERROR: Can't insert daily history: \n" + err.Error())
+		return err
+	}
+	err = database.ResetDailyUserCounts()
+	if err != nil {
+		fmt.Println("ERROR: Can't reset daily counts: \n" + err.Error())
+		return err
+	}
+	err = database.PerformDailyBackup()
+	if err != nil {
+		fmt.Println("ERROR: Can't perform daily db backup: \n" + err.Error())
+		return err
+	}
 
 	return nil
 }
