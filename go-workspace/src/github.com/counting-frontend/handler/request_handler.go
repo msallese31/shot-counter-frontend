@@ -4,12 +4,13 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"time"
 
+	"github.com/counting-frontend/auth"
 	"github.com/counting-frontend/backend"
+	"github.com/counting-frontend/cron"
 	"github.com/counting-frontend/data"
 	"github.com/counting-frontend/types"
-	"gopkg.in/mgo.v2"
-	"gopkg.in/mgo.v2/bson"
 )
 
 // RequestHandler is the general request handler for this server.  It determines where
@@ -29,6 +30,13 @@ func (h *RequestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		handleSignInRequest(w, r)
 	} else if r.URL.Path == "/readiness" {
 		w.WriteHeader(http.StatusOK)
+	} else if r.URL.Path == "/AS5Hr6Aoay" {
+		t := time.Now()
+		fmt.Println("TEST DB DAILY RESET:  " + t.Format("3:04PM"))
+	} else if r.URL.Path == "/pdeuPqVVnL" {
+		// This endpoint will run once daily.  It's backed by a k8's "cronJob".
+		// This is where our logic for daily DB resets will go.
+		handleDailyEndpoint(w, r)
 	} else {
 		// TODO: Create error message -> error code mapping
 		w.WriteHeader(http.StatusBadRequest)
@@ -46,8 +54,21 @@ func handleCountRequest(w http.ResponseWriter, r *http.Request) {
 	case http.MethodPost:
 		backend.CallShotCounter(countData)
 	}
-
 	return
+}
+
+func handleDailyEndpoint(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("In handleDailyEndpoint")
+	t := time.Now()
+	fmt.Println("DAILY ENDPOINT HIT!! " + t.Format("3:04PM"))
+	err := cron.DoDailyWork(w, r)
+	if err != nil {
+		fmt.Println(err.Error())
+		w.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	fmt.Println("Daily endpoint work completed successfully")
+	w.WriteHeader(http.StatusOK)
 }
 
 func handleSignInRequest(w http.ResponseWriter, r *http.Request) {
@@ -73,7 +94,7 @@ func handleSignInRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = signIn(&signInRequest)
+	err = auth.SignIn(&signInRequest)
 	switch err {
 	case nil:
 		w.WriteHeader(http.StatusOK)
@@ -84,86 +105,6 @@ func handleSignInRequest(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-}
-
-func signIn(signInRequest *types.SignInRequest) error {
-	fmt.Println("handling sign in request")
-
-	userFound, err := lookupUser(signInRequest)
-	if err != nil {
-		errorString := err.Error()
-		switch errorString {
-		case "not found":
-			fmt.Println("User not found with id: " + signInRequest.IDToken + " Name: " + signInRequest.Name + " Email: " + signInRequest.Email)
-			// Create User
-			err = createUser(signInRequest)
-			if err != nil {
-				fmt.Println("Unable to create new user: " + err.Error())
-				return err
-			}
-			fmt.Println("Created new user!")
-			return nil
-		default:
-			fmt.Println("Unseen DB error: \n" + errorString)
-			return err
-		}
-	} else {
-		fmt.Println("Found user with name: " + userFound.Name)
-		return nil
-	}
-
-	// Condition on whether or not the user exists
-	// We tried with Bo, now lets try with a unknown user.
-
-}
-
-func lookupUser(signInRequest *types.SignInRequest) (types.User, error) {
-
-	lookupUser := types.User{}
-
-	// Error check here?? TODO: Stop using test database
-	usersCollection, err := getUsersCollectionFromDB()
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		err = usersCollection.Find(bson.M{"email": signInRequest.Email}).One(&lookupUser)
-	}
-	return lookupUser, err
-}
-
-func createUser(signInRequest *types.SignInRequest) error {
-	// Create DB session
-	userToInsert := types.User{}
-	userToInsert.ID = signInRequest.IDToken
-	userToInsert.Name = signInRequest.Name
-	userToInsert.Email = signInRequest.Email
-	userToInsert.DailyCount = 0
-	userToInsert.MonthlyCount = 0
-	userToInsert.DailyRequests = 0
-	userToInsert.MonthlyRequests = 0
-	userToInsert.AccountType = "free"
-
-	usersCollection, err := getUsersCollectionFromDB()
-	if err != nil {
-		return err
-	}
-
-	err = usersCollection.Insert(userToInsert)
-	return err
-}
-
-func getUsersCollectionFromDB() (*mgo.Collection, error) {
-	// TODO: Take in mongo url from configuration
-
-	// Create DB session
-	session, err := mgo.Dial("mongodb://main_admin:abc123@mongodb-service")
-	if err != nil {
-		fmt.Println("Error dialing mongodb: " + err.Error())
-		return &mgo.Collection{}, err
-	}
-	// Error check here?? TODO: Stop using test database
-	usersCollection := session.DB("test").C("users")
-	return usersCollection, nil
 }
 
 var _ http.Handler = &RequestHandler{}

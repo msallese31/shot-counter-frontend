@@ -1,0 +1,18 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: daily
+spec:
+  schedule: "01 4 */1 * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: daily
+            image: pstauffer/curl
+            args:
+            - /bin/sh
+            - -c
+            - "curl 35.227.124.115:8080/pdeuPqVVnL"
+          restartPolicy: OnFailure
