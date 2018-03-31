@@ -54,7 +54,6 @@ func handleCountRequest(w http.ResponseWriter, r *http.Request) {
 	case http.MethodPost:
 		backend.CallShotCounter(countData)
 	}
-
 	return
 }
 

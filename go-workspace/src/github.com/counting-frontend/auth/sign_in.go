@@ -11,6 +11,7 @@ import (
 // CreateUser creates a new user for a first time app user
 func CreateUser(signInRequest *types.SignInRequest) error {
 	if signInRequest.Email == "" {
+		// TODO: Handle this the right way! (Return 400 and handle that in the android app)
 		fmt.Println("NEVER: Recieved empty email!!!!!")
 	}
 	// Create DB session
