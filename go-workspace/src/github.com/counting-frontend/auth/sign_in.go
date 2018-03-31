@@ -8,7 +8,11 @@ import (
 	"gopkg.in/mgo.v2/bson"
 )
 
+// CreateUser creates a new user for a first time app user
 func CreateUser(signInRequest *types.SignInRequest) error {
+	if signInRequest.Email == "" {
+		fmt.Println("NEVER: Recieved empty email!!!!!")
+	}
 	// Create DB session
 	userToInsert := types.User{}
 	userToInsert.ID = signInRequest.IDToken
@@ -29,6 +33,7 @@ func CreateUser(signInRequest *types.SignInRequest) error {
 	return err
 }
 
+// SignIn check's if a user exists in the DB, and reacts accordingly
 func SignIn(signInRequest *types.SignInRequest) error {
 	fmt.Println("handling sign in request")
 
@@ -59,6 +64,7 @@ func SignIn(signInRequest *types.SignInRequest) error {
 	// We tried with Bo, now lets try with a unknown user.
 }
 
+// LookupUser looks a user up in the DB
 func LookupUser(signInRequest *types.SignInRequest) (types.User, error) {
 
 	lookupUser := types.User{}
