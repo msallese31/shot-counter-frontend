@@ -32,10 +32,10 @@ func DoDailyWork(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-// DoDailyWork handles any work that needs to happen on a montly basis
+// DoMonthlyWork handles any work that needs to happen on a montly basis
 // Right now, this entails capturing monthly history and clearing monthly count.
 func DoMonthlyWork(w http.ResponseWriter, r *http.Request) error {
-	fmt.Println("In DoDailyWork")
+	fmt.Println("In DoMonthlyWork")
 
 	database.InsertMonthlyHistory()
 	database.ResetMonthlyUserCounts()

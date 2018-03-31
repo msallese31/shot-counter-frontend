@@ -36,6 +36,21 @@ func GetDailyHistoryCollection() (*mgo.Collection, error) {
 	return dailyHistoryCollection, nil
 }
 
+// GetMonthlyHistoryCollection sets up a session with our mongo DB and returns the "monthlyHistory" collection
+func GetMonthlyHistoryCollection() (*mgo.Collection, error) {
+	// TODO: Take in mongo url from configuration
+
+	// Create DB session
+	session, err := mgo.Dial("mongodb://main_admin:abc123@mongodb-service")
+	if err != nil {
+		fmt.Println("Error dialing mongodb: " + err.Error())
+		return &mgo.Collection{}, err
+	}
+	// Error check here?? TODO: Stop using test database
+	monthlyHistoryCollection := session.DB("test").C("monthlyHistory")
+	return monthlyHistoryCollection, nil
+}
+
 func PerformDailyBackup() error {
 	fmt.Println("stub for now")
 	return nil

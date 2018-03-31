@@ -32,7 +32,7 @@ type MonthlyHistory struct {
 	// The `json` struct tag maps between the json name
 	// and actual name of the field
 	Email        string `bson:"email"`
-	MonthlyCount int    `bson:"daily_count"`
+	MonthlyCount int    `bson:"monthly_count"`
 	Date         string `bson:"date"`
 }
 
