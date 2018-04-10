@@ -18,6 +18,7 @@ func GetShotCount(countData data.CountObject) {
 
 	// Create DB session
 	session, err := mgo.Dial("mongodb://main_admin:abc123@mongodb-service")
+	defer session.Close()
 	if err != nil {
 		// TODO: What do we return to the user here?
 		fmt.Println("Error dialing mongodb: " + err.Error())

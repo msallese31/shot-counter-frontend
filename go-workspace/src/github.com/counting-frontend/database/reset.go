@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/counting-frontend/types"
+	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -22,11 +23,15 @@ func ResetDailyUserCounts() error {
 }
 
 func resetFieldForAllUsers(field string) error {
-	usersCollection, err := GetUsersCollection()
+	// Create DB session
+	session, err := mgo.Dial("mongodb://main_admin:abc123@mongodb-service")
+	defer session.Close()
 	if err != nil {
-		fmt.Println("ERROR: Couldn't get user collection:\n" + err.Error())
+		fmt.Println("Error dialing mongodb: " + err.Error())
 		return err
 	}
+	// Error check here?? TODO: Stop using test database
+	usersCollection := session.DB("test").C("users")
 
 	findUsers := usersCollection.Find(bson.M{})
 	user := &types.User{}
