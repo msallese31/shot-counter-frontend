@@ -17,7 +17,7 @@ Collection Examples
     values : [{
                 x: ['1.234', 4.321],
                 y: ['1.234', 4.321],
-                z: ['1.234', 4.321] 
+                z: ['1.234', 4.321]     
              }],
     shots_counted : 0
     user_id: 'idFromGoogleAccount'       // Reference to the Host document
@@ -38,3 +38,24 @@ Sign in (check if user exists and if they don't, create a DB entry)
 Update the requests on inbound
 Update the counts during the response (after we've processed the data)
 Add to the accelData during the response
+
+
+
+HISTORY 
+> db.dailyHistory.findOne()
+{
+    _id : 'mongoAssigned',
+    email : 'bophil@gmail.com' ### PK
+    daily_count : 10,
+    date : dateString,
+}
+
+> db.monthlyHistory.findOne()
+{
+    _id : 'mongoAssigned',
+    name : 'Bo Phillips',
+    email : 'bophil@gmail.com' ### PK
+    monthly_count : 10,
+    month : 01, ### Month/Year only
+    year: 2018
+}

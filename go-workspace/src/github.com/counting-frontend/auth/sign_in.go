@@ -3,8 +3,8 @@ package auth
 import (
 	"fmt"
 
-	"github.com/counting-frontend/database"
 	"github.com/counting-frontend/types"
+	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
@@ -25,10 +25,15 @@ func CreateUser(signInRequest *types.SignInRequest) error {
 	userToInsert.MonthlyRequests = 0
 	userToInsert.AccountType = "free"
 
-	usersCollection, err := database.GetUsersCollection()
+	// Create DB session
+	session, err := mgo.Dial("mongodb://main_admin:abc123@mongodb-service")
+	defer session.Close()
 	if err != nil {
+		fmt.Println("Error dialing mongodb: " + err.Error())
 		return err
 	}
+	// Error check here?? TODO: Stop using test database
+	usersCollection := session.DB("test").C("users")
 
 	err = usersCollection.Insert(&userToInsert)
 	return err
@@ -70,8 +75,14 @@ func LookupUser(signInRequest *types.SignInRequest) (types.User, error) {
 
 	lookupUser := types.User{}
 
+	session, err := mgo.Dial("mongodb://main_admin:abc123@mongodb-service")
+	defer session.Close()
+	if err != nil {
+		fmt.Println("Error dialing mongodb: " + err.Error())
+		return lookupUser, err
+	}
 	// Error check here?? TODO: Stop using test database
-	usersCollection, err := database.GetUsersCollection()
+	usersCollection := session.DB("test").C("users")
 	if err != nil {
 		fmt.Println(err)
 	} else {

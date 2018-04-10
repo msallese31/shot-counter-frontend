@@ -49,13 +49,14 @@ func CallShotCounter(countData data.CountObject) {
 	// TODO: Stick configuration stuff in a context
 	backendURL := "http://shot-counter-backend:5000/count"
 	resp, err := http.Post(backendURL, "application/json; charset=utf-8", b)
+	defer resp.Body.Close()
+
 	if err != nil {
 		fmt.Println("Error talking to backend: " + err.Error())
 		w.WriteHeader(http.StatusInternalServerError)
 		types.SetupAndroidResponse(w, "Internal server error", 0)
 		return
 	}
-
 	// TODO: Return json from backend
 	buf := new(bytes.Buffer)
 	buf.ReadFrom(resp.Body)
@@ -98,6 +99,7 @@ func submitDataToDB(countData *data.CountObject) {
 
 	// Create DB session
 	session, err := mgo.Dial("mongodb://main_admin:abc123@mongodb-service")
+	defer session.Close()
 	if err != nil {
 		// TODO: What do we return to the user here?
 		fmt.Println("Error dialing mongodb: " + err.Error())
@@ -118,6 +120,7 @@ func submitDataToDB(countData *data.CountObject) {
 func incrementCountInDB(countData *data.CountObject) {
 	// Create DB session
 	session, err := mgo.Dial("mongodb://main_admin:abc123@mongodb-service")
+	defer session.Close()
 	if err != nil {
 		// TODO: What do we return to the user here?
 		fmt.Println("Error dialing mongodb: " + err.Error())

@@ -5,26 +5,25 @@ import (
 	"time"
 
 	"github.com/counting-frontend/types"
+	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
 
 func InsertDailyHistory() error {
 	fmt.Println("In InsertDailyHistory")
 
-	dailyHistoryCollection, err := GetDailyHistoryCollection()
+	// 	// Create DB session
+	session, err := mgo.Dial("mongodb://main_admin:abc123@mongodb-service")
+	defer session.Close()
 	if err != nil {
-		// TODO: Come up with how to handle this
-		fmt.Println(err)
+		fmt.Println("Error dialing mongodb: " + err.Error())
 		return err
 	}
+	// Error check here?? TODO: Stop using test database
+	dailyHistoryCollection := session.DB("test").C("dailyHistory")
 
-	//CHANGE THE WAY THIS IS STRUCTURED
-	usersCollection, err := GetUsersCollection()
-	if err != nil {
-		// TODO: Come up with how to handle this
-		fmt.Println(err)
-		return err
-	}
+	// Error check here?? TODO: Stop using test database
+	usersCollection := session.DB("test").C("users")
 
 	user := &types.User{}
 	dailyHistory := &types.DailyHistory{}
@@ -46,19 +45,16 @@ func InsertDailyHistory() error {
 func InsertMonthlyHistory() error {
 	fmt.Println("In InsertMonthlyHistory")
 
-	monthlyHistoryCollection, err := GetMonthlyHistoryCollection()
+	// Create DB session
+	session, err := mgo.Dial("mongodb://main_admin:abc123@mongodb-service")
+	defer session.Close()
 	if err != nil {
-		// TODO: Come up with how to handle this
-		fmt.Println(err)
+		fmt.Println("Error dialing mongodb: " + err.Error())
 		return err
 	}
 
-	usersCollection, err := GetUsersCollection()
-	if err != nil {
-		// TODO: Come up with how to handle this
-		fmt.Println(err)
-		return err
-	}
+	monthlyHistoryCollection := session.DB("test").C("monthlyHistory")
+	usersCollection := session.DB("test").C("users")
 
 	user := &types.User{}
 	monthlyHistory := &types.MonthlyHistory{}
