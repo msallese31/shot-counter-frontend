@@ -10,6 +10,7 @@ import (
 	"github.com/counting-frontend/backend"
 	"github.com/counting-frontend/cron"
 	"github.com/counting-frontend/data"
+	"github.com/counting-frontend/database"
 	"github.com/counting-frontend/types"
 )
 
@@ -21,10 +22,10 @@ type RequestHandler struct {
 func (h *RequestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	fmt.Println("Handling request")
+	// fmt.Println("Handling request")
 	if r.URL.Path == "/count" {
 		// TODO: Real logging
-		fmt.Println("Sending to shot counter")
+		// fmt.Println("Sending to shot counter")
 		handleCountRequest(w, r)
 	} else if r.URL.Path == "/sign-in" {
 		handleSignInRequest(w, r)
@@ -41,6 +42,13 @@ func (h *RequestHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		// This endpoint should be hit once a month by k8's cronjob.
 		// This is where we will capture & clear monthly history.
 		handleMonthlyEndpoint(w, r)
+	} else if r.URL.Path == "/getEntries" {
+		// Get Number of entries in DB for display when collecting data
+		handleGetADCountRequest(w, r)
+	} else if r.URL.Path == "/deleteEntries" {
+		// Dump Database to json file
+		handleDeleteEntriesRequest(w, r)
+
 	} else {
 		// TODO: Create error message -> error code mapping
 		w.WriteHeader(http.StatusBadRequest)
@@ -54,8 +62,10 @@ func handleCountRequest(w http.ResponseWriter, r *http.Request) {
 	countData.Writer = w
 	switch r.Method {
 	case http.MethodGet:
+		// this really isn't a count request
 		backend.GetShotCount(countData)
 	case http.MethodPost:
+		fmt.Println("Post request!")
 		backend.CallShotCounter(countData)
 	}
 	return
@@ -123,6 +133,38 @@ func handleSignInRequest(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+}
+
+func handleGetADCountRequest(w http.ResponseWriter, r *http.Request) {
+	count, err := database.GetADCount()
+	respJSON := types.DBCountResponse{}
+	// TODO: Create error message -> error code mapping
+	if err != nil {
+		respJSON.Error = err.Error()
+		json.NewEncoder(w).Encode(respJSON)
+		return
+	}
+	respJSON.Entries = count
+	json.NewEncoder(w).Encode(respJSON)
+	fmt.Println("Count in DB is:")
+	fmt.Println(count)
+	return
+}
+
+func handleDeleteEntriesRequest(w http.ResponseWriter, r *http.Request) {
+	err := database.DeleteADEntries()
+	respJSON := types.DBDeleteResponse{}
+	if err != nil {
+		respJSON.Status = err.Error()
+		json.NewEncoder(w).Encode(respJSON)
+		return
+	}
+	t := time.Now()
+	timestamp := t.Format("01-02-06-3:04PM")
+	statusString := fmt.Sprintf("Success! %s", timestamp)
+	respJSON.Status = statusString
+	json.NewEncoder(w).Encode(respJSON)
 
 }
 
