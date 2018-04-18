@@ -36,6 +36,21 @@ type AndroidResponse struct {
 	Error        string `json:"error"`
 }
 
+// DBCountResponse is the json data type we respond to for Android that tells how many entries in the AccelData collection
+type DBCountResponse struct {
+	// The `json` struct tag maps between the json name
+	// and actual name of the field
+	Entries int    `json:"entries"`
+	Error   string `json:"error"`
+}
+
+// DBDeleteResponse is the json data type we respond to for a delete entries request
+type DBDeleteResponse struct {
+	// The `json` struct tag maps between the json name
+	// and actual name of the field
+	Status string `json:"status"`
+}
+
 // SetupAndroidResponse is a helper function to setup an AndroidResponse on a ResponseWriter
 func SetupAndroidResponse(w http.ResponseWriter, requestError string, shotsCounted int) {
 	respJSON := AndroidResponse{}
